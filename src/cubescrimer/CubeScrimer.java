@@ -878,12 +878,13 @@ public class CubeScrimer {
         });
         
         JButton startButton = new JButton("START/STOP");
-        startButton.addActionListener(new ActionListener() {
+        
+        Action buttonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startStopTimer();
             }
-        });
+        };
         
         JButton resetButton = new JButton("RESET");
         resetButton.addActionListener(new ActionListener() {
@@ -897,6 +898,13 @@ public class CubeScrimer {
         timerButtonsP.setBackground(Color.darkGray);
         timerButtonsP.add(startButton);
         timerButtonsP.add(resetButton);
+        
+        InputMap resetBinputMap = resetButton.getInputMap(JComponent.WHEN_FOCUSED);
+        resetBinputMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
+        
+        startButton.addActionListener(buttonAction);
+        timerButtonsP.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "clickAction");
+        timerButtonsP.getActionMap().put("clickAction", buttonAction);
         
         gbc = new GridBagConstraints();
         gbc.gridx=0;
