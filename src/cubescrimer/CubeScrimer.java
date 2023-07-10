@@ -14,8 +14,10 @@ import javax.swing.*;
  */
 public class CubeScrimer {
     public static final double SQUARE_SIZE = 1.4;
-    public static final int TIMER_DELAY = 100;
+    public static final int TIMER_DELAY = 1000;
     private static int elapsedTime = 0;
+    private static Timer timer;
+    private static JLabel timerLabel;
 
     public static ArrayList<HashMap<String, CubeFace>> allCubeOrientations() {
         ArrayList<HashMap<String, CubeFace>> all = new ArrayList<>();
@@ -741,34 +743,32 @@ public class CubeScrimer {
         window.repaint();
         cubePanel.revalidate();
         cubePanel.repaint();
+        
+        resetTimer();
     }
     
-    static void startStopTimer(Timer timer, JLabel timerLabel) {
-        if (elapsedTime == 0) {
-            timer = new Timer(TIMER_DELAY, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                elapsedTime++;
-                updateTimerLabel(timerLabel);
-            }
-            });
-            timer.start();
-        } else {
+    static void startStopTimer() {
+        if (timer.isRunning()) {
             timer.stop();
+        } else {
+            timer.start();
         }
     }
     
-    static void resetTimer(JLabel timerLabel) {
-        elapsedTime = 0;
-        updateTimerLabel(timerLabel);
+    static void resetTimer() {
+        if (timer != null) {
+            timer.stop();
+            elapsedTime = 0;
+            updateTimerLabel();
+        }
     }
     
-    static void updateTimerLabel(JLabel timerLabel) {
-        int centiseconds = elapsedTime;
-        int seconds = elapsedTime / 100;
-        int minutes = elapsedTime / 6000;
+    static void updateTimerLabel() {
+        int seconds = elapsedTime % 60;
+        int minutes = elapsedTime / 60;
 
-        String formattedTime = String.format("%02d:%02d:%02d", minutes, seconds, centiseconds);
+        String formattedTime = String.format("%02d:%02d", minutes, seconds);
+
         timerLabel.setText(formattedTime);
     }
 
@@ -817,6 +817,15 @@ public class CubeScrimer {
         scrambleLabel.setFont(newFont);
         orientationLabel.setFont(newFont);
         
+        fontSize = Math.min(screenWidth, screenHeight) / 35;
+
+        font = scrambleLabel.getFont();
+        newFont = font.deriveFont(Font.PLAIN, fontSize);
+        
+        timerLabel = new JLabel("00:00");
+        timerLabel.setForeground(Color.white);
+        timerLabel.setFont(newFont);
+        
         redrawElements(window, new Cube(all.get(rnd.nextInt(24))), 30, cubePanel, scrambleLabel, orientationLabel);
         
         GridBagConstraints gbc;
@@ -849,9 +858,6 @@ public class CubeScrimer {
         JButton newScrambleB = new JButton("NEW SCRAMBLE");
         buttonsP.add(newScrambleB);
         
-//        JPanel timerButtonsP = new JPanel(new FlowLayout(FlowLayout.CENTER));
-//        buttonsP.setBackground(Color.darkGray);
-        
         Integer[] scrambleLengthArray = new Integer[]{30, 25, 20};
         JComboBox scrambleLengthCB = new JComboBox(scrambleLengthArray);
         buttonsP.add(scrambleLengthCB);
@@ -863,15 +869,49 @@ public class CubeScrimer {
             }
         });
         
-//        JLabel timerLabel = new JLabel("00:00:00");
-//        
-//        JButton startButton = new JButton("Start/Stop");
-//        startButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                startStopTimer(timer, timerLabel);
-//            }
-//        });
+        timer = new Timer(TIMER_DELAY, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                elapsedTime++;
+                updateTimerLabel();
+            }
+        });
+        
+        JButton startButton = new JButton("START/STOP");
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startStopTimer();
+            }
+        });
+        
+        JButton resetButton = new JButton("RESET");
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetTimer();
+            }
+        });
+        
+        JPanel timerButtonsP = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        timerButtonsP.setBackground(Color.darkGray);
+        timerButtonsP.add(startButton);
+        timerButtonsP.add(resetButton);
+        
+        gbc = new GridBagConstraints();
+        gbc.gridx=0;
+        gbc.gridy=4;
+        gbc.anchor=GridBagConstraints.CENTER;
+        gbc.insets = new Insets(5, 0, 0, 0);
+        window.add(timerLabel, gbc);
+        
+        gbc = new GridBagConstraints();
+        gbc.gridx=0;
+        gbc.gridy=5;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.weightx=1;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        window.add(timerButtonsP, gbc);
         
         gbc = new GridBagConstraints();
         gbc.gridx=0;
