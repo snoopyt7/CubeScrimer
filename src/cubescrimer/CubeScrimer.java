@@ -785,7 +785,7 @@ public class CubeScrimer {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
         int widthWindow = (int) (screenSize.width * 0.4);
-        int heightWindow = (int) (screenSize.height * 0.5);
+        int heightWindow = (int) (screenSize.height * 0.6);
         
         Dimension preferredSizeWindow = new Dimension(widthWindow, heightWindow);
         window.setSize(preferredSizeWindow);
@@ -810,14 +810,14 @@ public class CubeScrimer {
         Rectangle bounds = graphicsEnvironment.getMaximumWindowBounds();
         int screenWidth = bounds.width;
         int screenHeight = bounds.height;
-        int fontSize = Math.min(screenWidth, screenHeight) / 60;
+        int fontSize = Math.min(screenWidth, screenHeight) / 50;
 
         Font font = scrambleLabel.getFont();
         Font newFont = font.deriveFont(Font.PLAIN, fontSize);
         scrambleLabel.setFont(newFont);
         orientationLabel.setFont(newFont);
         
-        fontSize = Math.min(screenWidth, screenHeight) / 35;
+        fontSize = Math.min(screenWidth, screenHeight) / 30;
 
         font = scrambleLabel.getFont();
         newFont = font.deriveFont(Font.PLAIN, fontSize);
