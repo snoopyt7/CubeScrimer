@@ -13,7 +13,7 @@ import javax.swing.*;
  * @author Tilen
  */
 public class CubeScrimer {
-    public static final double SQUARE_SIZE = 1.4;
+    public static final double SQUARE_SIZE = 1.3;
     public static final int TIMER_DELAY = 1000;
     private static int elapsedTime = 0;
     private static Timer timer;
@@ -784,7 +784,7 @@ public class CubeScrimer {
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
-        int widthWindow = (int) (screenSize.width * 0.4);
+        int widthWindow = (int) (screenSize.width * 0.45);
         int heightWindow = (int) (screenSize.height * 0.6);
         
         Dimension preferredSizeWindow = new Dimension(widthWindow, heightWindow);
@@ -879,7 +879,7 @@ public class CubeScrimer {
         
         JButton startButton = new JButton("START/STOP");
         
-        Action buttonAction = new AbstractAction() {
+        Action startButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startStopTimer();
@@ -887,24 +887,32 @@ public class CubeScrimer {
         };
         
         JButton resetButton = new JButton("RESET");
-        resetButton.addActionListener(new ActionListener() {
+        
+        Action resetButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 resetTimer();
             }
-        });
+        };
         
         JPanel timerButtonsP = new JPanel(new FlowLayout(FlowLayout.CENTER));
         timerButtonsP.setBackground(Color.darkGray);
         timerButtonsP.add(startButton);
         timerButtonsP.add(resetButton);
         
-        InputMap resetBinputMap = resetButton.getInputMap(JComponent.WHEN_FOCUSED);
-        resetBinputMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
+        InputMap resetBInputMap = resetButton.getInputMap(JComponent.WHEN_FOCUSED);
+        resetBInputMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
         
-        startButton.addActionListener(buttonAction);
-        timerButtonsP.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "clickAction");
-        timerButtonsP.getActionMap().put("clickAction", buttonAction);
+        InputMap newScrambleBInputMap = newScrambleB.getInputMap(JComponent.WHEN_FOCUSED);
+        newScrambleBInputMap.put(KeyStroke.getKeyStroke("SPACE"), "none");
+        
+        startButton.addActionListener(startButtonAction);
+        timerButtonsP.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "startAction");
+        timerButtonsP.getActionMap().put("startAction", startButtonAction);
+        
+        resetButton.addActionListener(resetButtonAction);
+        timerButtonsP.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "resetAction");
+        timerButtonsP.getActionMap().put("resetAction", resetButtonAction);
         
         gbc = new GridBagConstraints();
         gbc.gridx=0;
