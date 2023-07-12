@@ -743,8 +743,6 @@ public class CubeScrimer {
         window.repaint();
         cubePanel.revalidate();
         cubePanel.repaint();
-        
-        resetTimer();
     }
     
     static void startStopTimer() {
@@ -785,7 +783,7 @@ public class CubeScrimer {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
         int widthWindow = (int) (screenSize.width * 0.45);
-        int heightWindow = (int) (screenSize.height * 0.6);
+        int heightWindow = (int) (screenSize.height * 0.75);
         
         Dimension preferredSizeWindow = new Dimension(widthWindow, heightWindow);
         window.setSize(preferredSizeWindow);
@@ -817,7 +815,7 @@ public class CubeScrimer {
         scrambleLabel.setFont(newFont);
         orientationLabel.setFont(newFont);
         
-        fontSize = Math.min(screenWidth, screenHeight) / 30;
+        fontSize = Math.min(screenWidth, screenHeight) / 20;
 
         font = scrambleLabel.getFont();
         newFont = font.deriveFont(Font.PLAIN, fontSize);
@@ -882,6 +880,7 @@ public class CubeScrimer {
         Action startButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                timerLabel.setForeground(Color.green);
                 startStopTimer();
             }
         };
@@ -891,6 +890,7 @@ public class CubeScrimer {
         Action resetButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                timerLabel.setForeground(Color.white);
                 resetTimer();
             }
         };
