@@ -748,6 +748,7 @@ public class CubeScrimer {
     static void startStopTimer() {
         if (timer.isRunning()) {
             timer.stop();
+            timerLabel.setForeground(Color.white);
         } else {
             timer.start();
         }
